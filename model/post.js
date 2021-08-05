@@ -23,30 +23,35 @@ const postSchema = new Schema({
         required: true
     },
 
-    like: {
-        type: Number,
-        default: 0,
-        min: 0
+    likedBy: {
+        type: [ mongoose.Schema.Types.ObjectId ],
+        ref: 'User'
     },
 
-    watch: {
+    watched: {
         type: Number,
-        default: 0,
-        min: 0
+        min: 0,
+        default: 0
     },
 
     videoLink: {
         type: String,
         required: true,
-        min: 10,
-        max: 300
+        minlength: 10,
+        maxlength: 500
     },
 
     imageLink: {
         type: String,
         required: true,
-        min: 10,
-        max: 300
+        minlength: 10,
+        maxlength: 500
+    },
+
+    isPublished: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 });
 
@@ -62,6 +67,29 @@ function validate(inp) {
         description: Joi.string()
             .required()
             .min(10)
+            .max(120),
+
+        videoLink: Joi.string()
+            .required()
+            .min(10),
+            
+        imageLink: Joi.string()
+            .required()
+            .min(10)
+    });
+
+    const result = schema.validate(inp);
+    return result;
+}
+
+function validatePut(inp) {
+    const schema = Joi.object({
+        title: Joi.string()
+            .min(2)
+            .max(50),
+
+        description: Joi.string()
+            .min(10)
             .max(120)
     });
 
@@ -72,5 +100,6 @@ function validate(inp) {
 module.exports = {
     Post,
     validate,
-    postSchema
+    postSchema,
+    validatePut
 }

@@ -29,10 +29,9 @@ const adminSchema = new Schema({
     },
 
     power: {
-        type: Number,
-        default: 1,
-        min: 1,
-        max: 7
+        type: Boolean,
+        default: false,
+        required: true
     }
 });
 
