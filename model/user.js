@@ -51,9 +51,14 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.generateToken = function () {
-    const token = jwt.sign({ _id: this._id }, config.get('jwkPass'));
+    const token = jwt.sign({ _id: this._id }, config.get('jwtPass'));
     return token;
 }
+
+userSchema.virtual('fullName').get( function () {
+    const fullname = `${ this.firstName } ${ this.lastName }`
+    return fullname;
+})
 
 const User = mongoose.model('User', userSchema);
 
@@ -77,7 +82,7 @@ function validate(inp) {
 
         password: Joi.string()
             .required()
-            .minlength(7)
+            .min(7)
             .max(50)
     });
 
@@ -89,11 +94,11 @@ function validatePasswordChange(inp) {
     const schema = Joi.object({
         oldPassword: Joi.string()
             .required()
-            .minlength(7)
+            .min(7)
             .max(50),
 
         newPassword: Joi.string()
-            .minlength(7)
+            .min(7)
             .required()
             .max(50)
     });
@@ -107,12 +112,12 @@ function validateLogin(inp) {
         email: Joi.string()
             .email()
             .required()
-            .minlength(7)
+            .min(7)
             .max(50),
 
         password: Joi.string()
             .required()
-            .minlength(7)
+            .min(7)
             .max(50)
     });
 

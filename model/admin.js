@@ -36,7 +36,7 @@ const adminSchema = new Schema({
 });
 
 adminSchema.methods.generateToken = function () {
-    const token = jwt.sign({ _id: this._id, power: this.power }, config.get('jwkPass'));
+    const token = jwt.sign({ _id: this._id, power: this.power, isAdmin: true }, config.get('jwtPass'));
     return token;
 }
 
@@ -44,18 +44,18 @@ const Admin = mongoose.model('Admin', adminSchema);
 
 function validate(inp) {
     const schema = Joi.object({
-        username: joi.string()
+        username: Joi.string()
             .required()
             .min(2)
             .max(30),
 
-        email: joi.string()
+        email: Joi.string()
             .email()
             .required()
             .min(5)
             .max(50),
 
-        password: joi.string()
+        password: Joi.string()
             .required()
             .min(10)
             .max(50)
@@ -67,13 +67,13 @@ function validate(inp) {
 
 function validateLogin(inp) {
     const schema = Joi.object({
-        email: joi.string()
+        email: Joi.string()
             .email()
             .required()
             .min(5)
             .max(50),
 
-        password: joi.string()
+        password: Joi.string()
             .required()
             .min(10)
             .max(50)
@@ -85,12 +85,12 @@ function validateLogin(inp) {
 
 function validateChangePassword(inp) {
     const schema = Joi.object({
-        oldPassword: joi.string()
+        oldPassword: Joi.string()
             .required()
             .min(10)
             .max(50),
 
-        newPassword: joi.string()
+        newPassword: Joi.string()
             .required()
             .min(10)
             .max(50)
